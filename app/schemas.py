@@ -5,6 +5,7 @@ from datetime import datetime
 class UserCreate(BaseModel):
     email: EmailStr
     password: str
+    is_admin: Optional[int] = 0
 
 class UserOut(BaseModel):
     id: int
