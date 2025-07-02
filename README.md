@@ -1,119 +1,154 @@
-# Blog API with JWT Authentication
+# Blog API with JWT Authentication (FastAPI)
 
-## Overview
+## 📌 Overview
 
-This is a RESTful Blog API built with FastAPI. It allows users to register and log in using JWT authentication, and provides CRUD operations for blog posts. Only authenticated users can create, update, or delete posts, and users can only modify their own content.
+This is a RESTful Blog API built with **FastAPI** that supports **JWT-based user authentication**, **post management (CRUD)**, and **admin-restricted user access**. Each user can create, read, update, and delete their own blog posts. Admin users can view all registered users.
 
-## Features
+---
 
-- User registration with email and password (securely hashed)
-- JWT-based login and token system (access and refresh tokens)
-- CRUD for blog posts
-- Permissions: only the post author can update or delete
-- SQLAlchemy ORM + Alembic migrations
-- SQLite or PostgreSQL support
-- Automatic documentation via Swagger and ReDoc
-- Unit tests with pytest
-- Role-based access with optional admin control
+## 🚀 Features
 
-## Project Structure
+- User registration with email and password (hashed)
+- Login with JWT (access and refresh tokens)
+- Secure routes protected by JWT
+- Full CRUD for blog posts
+- Ownership enforcement: only the post author can edit/delete
+- Admin-only access to user data
+- SQLAlchemy ORM and Alembic migrations
+- SQLite by default (easy to switch to PostgreSQL)
+- Automated tests with pytest
+- Clean, modular codebase following best practices
 
+---
+
+## 📁 Project Structure
+
+```
 blog_api/
 ├── app/
-│ ├── main.py
-│ ├── models.py
-│ ├── schemas.py
-│ ├── crud.py
-│ ├── database.py
-│ ├── dependencies.py
-│ └── routers/
-│ ├── auth.py
-│ ├── posts.py
-│ └── users.py
+│   ├── main.py
+│   ├── models.py
+│   ├── schemas.py
+│   ├── crud.py
+│   ├── database.py
+│   ├── dependencies.py
+│   └── routers/
+│       ├── auth.py
+│       ├── posts.py
+│       └── users.py
 ├── alembic/
 ├── tests/
-│ └── test_posts.py
+│   └── test_posts.py
 ├── alembic.ini
 ├── requirements.txt
 └── README.md
+```
 
-bash
-Copy
-Edit
+---
 
-## Setup Instructions
+## 🧪 Tech Stack
 
-### 1. Clone and install dependencies
+- **FastAPI** for API development
+- **SQLAlchemy** as ORM
+- **Alembic** for database migrations
+- **JWT** with `fastapi-jwt-auth` for secure authentication
+- **SQLite** or **PostgreSQL** support
+- **Pytest** for testing
+
+---
+
+## ⚙️ Installation
+
+### 1. Clone the repository and install dependencies
 
 ```bash
 git clone https://github.com/your-username/blog-api.git
 cd blog-api
 python -m venv venv
-source venv/bin/activate  # or venv\Scripts\activate on Windows
+source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
-2. Configure environment variables
-Create a .env file:
+```
 
-ini
-Copy
-Edit
+### 2. Configure environment variables
+
+Create a `.env` file:
+
+```
 DATABASE_URL=sqlite:///./test.db
-SECRET_KEY=your-secret-key
+JWT_SECRET_KEY=your_jwt_secret
+```
+
 For PostgreSQL:
 
-bash
-Copy
-Edit
+```
 DATABASE_URL=postgresql://user:password@localhost:5432/blogdb
-3. Run database migrations
-bash
-Copy
-Edit
+```
+
+### 3. Apply migrations
+
+```bash
 alembic upgrade head
-4. Start the server
-bash
-Copy
-Edit
+```
+
+---
+
+## ▶️ Running the App
+
+```bash
 uvicorn app.main:app --reload
-Access:
+```
 
-Swagger: http://localhost:8000/docs
+Access the API at:
 
-ReDoc: http://localhost:8000/redoc
+- Swagger: [http://localhost:8000/docs](http://localhost:8000/docs)
+- ReDoc: [http://localhost:8000/redoc](http://localhost:8000/redoc)
 
-API Endpoints
-Auth
-POST /auth/register – Create a new user
+---
 
-POST /auth/login – Log in and receive JWT tokens
+## 🔐 Authentication Flow
 
-Posts (Protected)
-GET /posts/ – List posts
+1. **Register** via `POST /auth/register`
+2. **Login** via `POST /auth/login` → returns access + refresh tokens
+3. **Include token** in the `Authorization: Bearer <token>` header for protected routes
 
-POST /posts/ – Create a post
+---
 
-GET /posts/{id} – View a post
+## 📬 API Endpoints
 
-PUT /posts/{id} – Update (author only)
+### 🔐 Auth
+- `POST /auth/register` – Register a new user
+- `POST /auth/login` – Log in and receive tokens
 
-DELETE /posts/{id} – Delete (author only)
+### 📝 Posts (Authenticated)
+- `GET /posts/` – List all posts
+- `POST /posts/` – Create a post (authenticated)
+- `GET /posts/{id}` – View a single post
+- `PUT /posts/{id}` – Update own post
+- `DELETE /posts/{id}` – Delete own post
 
-Users (Admin only)
-GET /users/ – List all users
+### 👤 Users (Admin-only)
+- `GET /users/` – List all users
+- `GET /users/{id}` – Get user by ID
 
-GET /users/{id} – Get a single user
+---
 
-Testing
-bash
-Copy
-Edit
+## 🧪 Running Tests
+
+```bash
 pytest
-Notes
-Ensure the SECRET_KEY is secure in production.
+```
 
-Change the database URL to use PostgreSQL if needed.
+---
 
-Admin user creation can be done using create_admin.py script.
+## 🧠 Notes
 
-License
+- Use hashed passwords (`bcrypt`) for security.
+- Only authors can modify their posts.
+- Admin control is enforced for user routes.
+- Suitable for extension with tags, categories, comments, etc.
+
+---
+
+## 📄 License
+
 MIT License
